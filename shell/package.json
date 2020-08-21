@@ -1,0 +1,22 @@
+{
+  "name": "shell",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/devonChurch/mochi-ice-cream.git",
+  "author": "Devon Church <notifydevon@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "^4.3.0",
+    "ts-loader": "^8.0.2",
+    "typescript": "^4.0.2",
+    "webpack": "^5.0.0-beta.28",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "single-spa": "^5.5.5"
+  }
+}
