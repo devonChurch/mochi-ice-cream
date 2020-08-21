@@ -1,7 +1,13 @@
-{
-  const foo: undefined = undefined;
-  const bar = "potato";
-  const baz = foo ?? bar;
+import * as singleSpa from "single-spa";
 
-  console.log(`baz = ${baz}`);
-}
+const { registerApplication, start } = singleSpa;
+const customProps = {};
+
+registerApplication({
+    name: "appOne",
+    app: async () => import("appOne/Wrapper"),
+    activeWhen: () => true,
+    customProps
+});
+
+start();

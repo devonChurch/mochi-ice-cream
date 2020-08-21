@@ -3,32 +3,54 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 
 const DIR_SRC = path.resolve(__dirname, "src");
+const PORT = 8001;
+const DEVELOPMENT_HREF = `http://localhost:${PORT}/`;
 
-module.exports = {
-  entry: "./src/index",
+module.exports = (args) =>
+  console.log("Webpack args", args) || {
+    entry: path.resolve(DIR_SRC, "index"),
 
-  mode: "development",
+    output: {
+      publicPath: DEVELOPMENT_HREF,
+    },
 
-  devtool: "source-map",
+    mode: "development",
 
-  resolve: {
-    extensions: [".ts", ".js"],
-  },
+    devtool: "source-map",
 
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: "ts-loader",
-        exclude: /node_modules/,
-        include: [DIR_SRC]
-      },
+    resolve: {
+      extensions: [".ts", ".js"],
+    },
+
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          use: "ts-loader",
+          exclude: /node_modules/,
+          include: [DIR_SRC],
+        },
+      ],
+    },
+
+    plugins: [
+      new ModuleFederationPlugin({
+        name: "app-one",
+        library: { type: "var", name: "appOne" },
+        filename: "remoteEntry.js",
+        remotes: {},
+        exposes: {
+          "./Wrapper": "./src/index",
+        },
+        shared: [],
+      }),
+
+      new HtmlWebpackPlugin({
+        template: path.resolve(DIR_SRC, "index.html"),
+      }),
     ],
-  },
 
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(DIR_SRC, "index.html")
-    })
-  ]
-};
+    devServer: {
+      port: PORT
+    }
+  };
