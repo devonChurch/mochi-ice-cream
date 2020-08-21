@@ -5,6 +5,7 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 const DIR_SRC = path.resolve(__dirname, "src");
 const SHELL_PORT = 8000;
 const APP_ONE_PORT = 8001;
+const APP_TWO_PORT = 8002;
 
 const createDevelopmentHref = (port) => `http://localhost:${port}/`;
 
@@ -41,6 +42,7 @@ module.exports = {
       filename: "remoteEntry.js",
       remotes: {
         "appOne": "appOne",
+        "appTwo": "appTwo",
       },
       exposes: {},
       shared: [],

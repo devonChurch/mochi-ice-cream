@@ -10,4 +10,11 @@ registerApplication({
     customProps
 });
 
+registerApplication({
+    name: "appTwo",
+    app: async () => import("appTwo/Wrapper"),
+    activeWhen: () => true,
+    customProps
+});
+
 start();

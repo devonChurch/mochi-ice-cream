@@ -9,3 +9,4 @@ declare module "single-spa" {
 
 
 declare module "appOne/Wrapper" {}
+declare module "appTwo/Wrapper" {}
