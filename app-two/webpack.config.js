@@ -6,8 +6,8 @@ const DIR_SRC = path.resolve(__dirname, "src");
 const PORT = 8002;
 const DEVELOPMENT_HREF = `http://localhost:${PORT}/`;
 
-module.exports = (args) =>
-  console.log("Webpack args", args) || {
+module.exports = (_, args) =>
+  console.log("Webpack args", _, args) || {
     entry: path.resolve(DIR_SRC, "index"),
 
     output: {

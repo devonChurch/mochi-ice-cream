@@ -38,13 +38,10 @@ module.exports = {
   plugins: [
     new ModuleFederationPlugin({
       name: "shell",
-      library: { type: "var", name: "shell" },
-      filename: "remoteEntry.js",
       remotes: {
-        "appOne": "appOne",
-        "appTwo": "appTwo",
+        "appOne": `appOne@${createDevelopmentHref(APP_ONE_PORT)}remoteEntry.js`,
+        "appTwo": `appTwo@${createDevelopmentHref(APP_TWO_PORT)}remoteEntry.js`,
       },
-      exposes: {},
       shared: [],
     }),
 
