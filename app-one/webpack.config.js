@@ -42,7 +42,7 @@ module.exports = (_, args) =>
         exposes: {
           "./Wrapper": "./src/index",
         },
-        shared: [],
+        shared: ["angular", "single-spa-angularjs"],
       }),
 
       new HtmlWebpackPlugin({
