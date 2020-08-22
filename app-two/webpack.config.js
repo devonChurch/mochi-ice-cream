@@ -6,8 +6,15 @@ const DIR_SRC = path.resolve(__dirname, "src");
 const PORT = 8002;
 const DEVELOPMENT_HREF = `http://localhost:${PORT}/`;
 
-module.exports = (_, args) =>
-  console.log("Webpack args", _, args) || {
+module.exports = (_, args) => {
+  console.log("Building Application [Two]", args);
+
+  // We set `eagar` === `true` in scenarios where we are build the application
+  // to run in isolation as a "full" experience. There is no dependancy orchestration
+  // outside of a Micro Front-end set up.
+  const IS_EAGAR = args.env.intent === "full";
+
+  return {
     entry: path.resolve(DIR_SRC, "index"),
 
     output: {
@@ -42,7 +49,14 @@ module.exports = (_, args) =>
         exposes: {
           "./Wrapper": "./src/index",
         },
-        shared: ["angular", "single-spa-angularjs"],
+        shared: [
+          {
+            angular: { eager: IS_EAGAR },
+          },
+          {
+            "single-spa-angularjs": { eager: IS_EAGAR },
+          },
+        ],
       }),
 
       new HtmlWebpackPlugin({
@@ -54,3 +68,4 @@ module.exports = (_, args) =>
       port: PORT
     }
   };
+};

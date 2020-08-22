@@ -6,7 +6,9 @@
   "author": "Devon Church <notifydevon@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "yarn start:micro",
+    "start:full": "webpack-dev-server --env.intent=full",
+    "start:micro": "webpack-dev-server --env.intent=micro"
   },
   "devDependencies": {
     "@types/angular": "^1.7.2",
