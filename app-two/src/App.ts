@@ -1,7 +1,15 @@
 import * as angular from "angular";
 
 angular.module("appTwo", []).component("wrapper", {
-    template: `<h1 class="h3">App Two</h1>`,
+    template: `
+    <div class="alert alert-success">
+      <h4 class="alert-heading">Application Two</h4>
+      <ul>
+        <li>Environment: <strong>Development</strong></li>
+        <li>Framework: <strong>AngularJS</strong></li>
+      </ul>
+    </div>
+    `,
     controllerAs: "vm",
     controller() {
       const vm = this;

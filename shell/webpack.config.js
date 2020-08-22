@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 
 const DIR_SRC = path.resolve(__dirname, "src");
@@ -32,6 +33,10 @@ module.exports = {
         exclude: /node_modules/,
         include: [DIR_SRC],
       },
+      {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
     ],
   },
 
@@ -39,8 +44,8 @@ module.exports = {
     new ModuleFederationPlugin({
       name: "shell",
       remotes: {
-        "appOne": `appOne@${createDevelopmentHref(APP_ONE_PORT)}remoteEntry.js`,
-        "appTwo": `appTwo@${createDevelopmentHref(APP_TWO_PORT)}remoteEntry.js`,
+        appOne: `appOne@${createDevelopmentHref(APP_ONE_PORT)}remoteEntry.js`,
+        appTwo: `appTwo@${createDevelopmentHref(APP_TWO_PORT)}remoteEntry.js`,
       },
       shared: [],
     }),
@@ -48,9 +53,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(DIR_SRC, "index.html"),
     }),
+
+    new MiniCssExtractPlugin(),
   ],
 
   devServer: {
-    port: SHELL_PORT
-  }
+    port: SHELL_PORT,
+  },
 };

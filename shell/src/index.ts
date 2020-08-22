@@ -1,4 +1,5 @@
 import * as singleSpa from "single-spa";
+import "bootstrap/dist/css/bootstrap.css";
 
 const { registerApplication, start } = singleSpa;
 const customProps = {};
