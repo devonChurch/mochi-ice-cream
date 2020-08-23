@@ -6,9 +6,12 @@
   "author": "Devon Church <notifydevon@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "build": "webpack",
+    "deploy": "aws s3 sync ./dist/ s3://mochi-ice-cream.shell"
   },
   "devDependencies": {
+    "axios": "^0.20.0",
     "css-loader": "^4.2.1",
     "html-webpack-plugin": "^4.3.0",
     "mini-css-extract-plugin": "^0.10.0",

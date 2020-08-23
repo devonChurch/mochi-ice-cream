@@ -1,0 +1,29 @@
+{
+    "shell": {
+        "development": {
+            "port": 8000,
+            "href": "http://localhost:8000/"
+        },
+        "production": {
+            "href": "http://mochi-ice-cream.shell.s3-website-ap-southeast-2.amazonaws.com/"
+        }
+    },
+    "appOne": {
+        "development": {
+            "port": 8001,
+            "href": "http://localhost:8001/"
+        },
+        "production": {
+            "href": "http://mochi-ice-cream.app-one.s3-website-ap-southeast-2.amazonaws.com/"
+        }
+    },
+    "appTwo": {
+        "development": {
+            "port": 8002,
+            "href": "http://localhost:8002/"
+        },
+        "production": {
+            "href": "http://mochi-ice-cream.app-two.s3-website-ap-southeast-2.amazonaws.com/"
+        }
+    }
+}
