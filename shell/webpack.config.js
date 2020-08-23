@@ -1,46 +1,50 @@
 const path = require("path");
 const axios = require("axios");
+const capitalize = require("lodash.capitalize");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 
-
 module.exports = async (_, args) => {
+  const PRODUCTION = "production";
+  const DEVELOPMENT = "development";
+  const MODE = args.mode;
+  const DIR_SRC = path.resolve(__dirname, "src");
+  const IS_NOT_DEVELOPMENT = MODE !== DEVELOPMENT;
+  const IS_DEVELOPMENT = !IS_NOT_DEVELOPMENT;
+
   const locConfig = await axios("http://mochi-ice-cream.config.s3-website-ap-southeast-2.amazonaws.com/loc.config.json");
   const { shell: shellLoc, appOne: appOneLoc, appTwo: appTwoLoc } = locConfig.data;
-  
-  const envConfig = require("./env.config.json");
-  const { shell: shellEnv, appOne: appOneEnv, appTwo: appTwoEnv } = envConfig;
-  
-  const DIR_SRC = path.resolve(__dirname, "src");
-  const BUILD_ENV = shellEnv;
-  const IS_NOT_DEVELOPMENT = BUILD_ENV !== "development"
-  const IS_DEVELOPMENT = !IS_NOT_DEVELOPMENT;
+
+  const { appOne: appOneEnv, appTwo: appTwoEnv } = IS_NOT_DEVELOPMENT
+    ? { appOne: PRODUCTION, appTwo: PRODUCTION }
+    : require("./env.config.json");
 
   console.log(
     "Building Application [Shell]",
     args,
     JSON.stringify({
       location: { shellLoc, appOneLoc, appTwoLoc },
-      environment: { shellEnv, appOneEnv, appTwoEnv },
-      consts: { DIR_SRC, BUILD_ENV, IS_NOT_DEVELOPMENT, IS_DEVELOPMENT }
-    }, null, 2));
+      environment: { appOneEnv, appTwoEnv },
+      consts: { DIR_SRC, MODE, IS_NOT_DEVELOPMENT, IS_DEVELOPMENT },
+    }, null, 2 )
+  );
 
   return {
     entry: path.resolve(DIR_SRC, "index"),
-  
+
     output: {
-      publicPath: shellLoc[BUILD_ENV].href
+      publicPath: shellLoc[MODE].href,
     },
-  
-    mode: IS_DEVELOPMENT ? "development" : "production",
-  
+
+    mode: MODE,
+
     devtool: "source-map",
-  
+
     resolve: {
       extensions: [".ts", ".js"],
     },
-  
+
     module: {
       rules: [
         {
@@ -55,7 +59,7 @@ module.exports = async (_, args) => {
         },
       ],
     },
-  
+
     plugins: [
       new ModuleFederationPlugin({
         name: "shell",
@@ -65,18 +69,19 @@ module.exports = async (_, args) => {
         },
         shared: [],
       }),
-  
+
       new HtmlWebpackPlugin({
         template: path.resolve(DIR_SRC, "index.html"),
+        mode: capitalize(MODE)
       }),
-  
+
       new MiniCssExtractPlugin(),
     ],
-  
-    ...IS_DEVELOPMENT && {
+
+    ...(IS_DEVELOPMENT && {
       devServer: {
-        port: shellLoc.development.port,
-      }
-    },
-  }
+        port: shellLoc[DEVELOPMENT].port,
+      },
+    }),
+  };
 };

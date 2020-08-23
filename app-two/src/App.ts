@@ -5,7 +5,7 @@ angular.module("appTwo", []).component("wrapper", {
     <div class="alert alert-success">
       <h4 class="alert-heading">Application Two</h4>
       <ul>
-        <li>Environment: <strong>Development</strong></li>
+        <li>Environment: <strong>{{ vm.mode }}</strong></li>
         <li>Framework: <strong>AngularJS</strong></li>
       </ul>
     </div>
@@ -13,5 +13,6 @@ angular.module("appTwo", []).component("wrapper", {
     controllerAs: "vm",
     controller() {
       const vm = this;
+      vm.mode = process.env.MODE;
     },
 });

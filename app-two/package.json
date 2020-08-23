@@ -7,12 +7,17 @@
   "license": "MIT",
   "scripts": {
     "start": "yarn start:micro",
-    "start:full": "webpack-dev-server --env.intent=full",
-    "start:micro": "webpack-dev-server --env.intent=micro"
+    "start:full": "webpack-dev-server --mode=development --env.intent=full",
+    "start:micro": "webpack-dev-server --mode=development --env.intent=micro",
+    "build": "webpack --mode=production",
+    "deploy": "aws s3 sync ./dist/ s3://mochi-ice-cream.app-two"
   },
   "devDependencies": {
     "@types/angular": "^1.7.2",
+    "@types/lodash.capitalize": "^4.2.6",
+    "axios": "^0.20.0",
     "html-webpack-plugin": "^4.3.0",
+    "lodash.capitalize": "^4.2.1",
     "ts-loader": "^8.0.2",
     "typescript": "^4.0.2",
     "webpack": "^5.0.0-beta.28",
