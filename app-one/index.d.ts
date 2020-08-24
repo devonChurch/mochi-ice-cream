@@ -8,9 +8,20 @@ interface Lifecycles {
     unmount: Unmount;
 }
 
-type SingleSpaAngularJS = (props: unknown) => Lifecycles;
+interface Props {
+    [key: string]: unknown
+}
+
+type SingleSpaAngularJS = (props: Props) => Lifecycles;
 
 declare module "single-spa-angularjs" {
     const singleSpaAngularJS: SingleSpaAngularJS;
     export default singleSpaAngularJS;
 }
+
+declare module "single-spa" {
+    export function registerApplication(props: Props): undefined;
+    export function start(): undefined;
+}
+
+declare module "appOne/Wrapper" {}

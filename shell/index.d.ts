@@ -7,6 +7,5 @@ declare module "single-spa" {
     export function start(): undefined;
 }
 
-
 declare module "appOne/Wrapper" {}
 declare module "appTwo/Wrapper" {}

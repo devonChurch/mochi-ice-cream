@@ -6,9 +6,7 @@
   "author": "Devon Church <notifydevon@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "yarn start:micro",
-    "start:full": "webpack-dev-server --mode=development --env.intent=full",
-    "start:micro": "webpack-dev-server --mode=development --env.intent=micro",
+    "start": "webpack-dev-server --mode=development",
     "build": "webpack --mode=production",
     "deploy": "aws s3 sync ./dist/ s3://mochi-ice-cream.app-one"
   },
@@ -16,8 +14,10 @@
     "@types/angular": "^1.7.2",
     "@types/lodash.capitalize": "^4.2.6",
     "axios": "^0.20.0",
+    "css-loader": "^4.2.1",
     "html-webpack-plugin": "^4.3.0",
     "lodash.capitalize": "^4.2.1",
+    "mini-css-extract-plugin": "^0.10.0",
     "ts-loader": "^8.0.2",
     "typescript": "^4.0.2",
     "webpack": "^5.0.0-beta.28",
@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "angular": "1.5.8",
+    "bootstrap": "^4.5.2",
     "single-spa": "^5.5.5",
     "single-spa-angularjs": "^3.3.0"
   }
