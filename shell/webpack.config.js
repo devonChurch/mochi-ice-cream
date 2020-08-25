@@ -13,19 +13,23 @@ module.exports = async (_, args) => {
   const IS_NOT_DEVELOPMENT = MODE !== DEVELOPMENT;
   const IS_DEVELOPMENT = !IS_NOT_DEVELOPMENT;
 
-  const locConfig = await axios("http://mochi-ice-cream.config.s3-website-ap-southeast-2.amazonaws.com/loc.config.json");
-  const { shell: shellLoc, appOne: appOneLoc, appTwo: appTwoLoc } = locConfig.data;
+  const { data: locConfig } = await axios("http://mochi-ice-cream.config.s3-website-ap-southeast-2.amazonaws.com/loc.config.json");
+  const { shell: shellLoc, appOne: appOneLoc, appTwo: appTwoLoc, utilities: utilitiesLoc } = locConfig;
 
-  const { appOne: appOneEnv, appTwo: appTwoEnv } = IS_NOT_DEVELOPMENT
-    ? { appOne: PRODUCTION, appTwo: PRODUCTION }
+  const envConfig = IS_NOT_DEVELOPMENT
+    ? { appOne: PRODUCTION, appTwo: PRODUCTION, utilities: PRODUCTION }
     : require("./env.config.json");
+  const { appOne: appOneEnv, appTwo: appTwoEnv, utilities: utilitiesEnv } = envConfig;
+
+
+  console.log('UTILITIES...', `utilities@${utilitiesLoc[utilitiesEnv].href}remoteEntry.js`);
 
   console.log(
     "Building Application [Shell]",
     args,
     JSON.stringify({
-      location: { shellLoc, appOneLoc, appTwoLoc },
-      environment: { appOneEnv, appTwoEnv },
+      location: locConfig,
+      environment: envConfig,
       consts: { DIR_SRC, MODE, IS_NOT_DEVELOPMENT, IS_DEVELOPMENT },
     }, null, 2 )
   );
@@ -66,6 +70,7 @@ module.exports = async (_, args) => {
         remotes: {
           appOne: `appOne@${appOneLoc[appOneEnv].href}remoteEntry.js`,
           appTwo: `appTwo@${appTwoLoc[appTwoEnv].href}remoteEntry.js`,
+          utilities: `utilities`,
         },
         shared: [],
       }),

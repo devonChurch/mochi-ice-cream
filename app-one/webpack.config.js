@@ -84,7 +84,8 @@ module.exports = async (_, args) => {
           // This allows us to resolve async shared dependancies without modifying
           // the `eagar` settings and can use same federated config to deploy an
           // "isolated" and "full" Micro Front-end bundle.
-          appOne: "appOne"
+          appOne: "appOne",
+          utilities: "utilities"
         }
       }),
 

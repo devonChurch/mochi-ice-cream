@@ -25,3 +25,6 @@ declare module "single-spa" {
 }
 
 declare module "appOne/Wrapper" {}
+declare module "utilities/core" {
+    export function checkHasFeature(id: string): unknown;
+}

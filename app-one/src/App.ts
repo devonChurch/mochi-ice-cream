@@ -1,11 +1,7 @@
 import * as angular from "angular";
 
-const checkFeature = () => new Promise((resolve) => setTimeout(() => {
-    resolve(true);
-}, 3000))
-
 angular.module("appOne", []).component("wrapper", {
-    template: `
+  template: `
     <div class="alert alert-info">
       <h4 class="alert-heading">Application One</h4>
       <ul>
@@ -20,18 +16,18 @@ angular.module("appOne", []).component("wrapper", {
       </ul>
     </div>
     `,
-    controllerAs: "vm",
-    controller($scope) {
-      const vm = this;
-      vm.mode = process.env.MODE;
-      vm.hasFeature = false;
-      vm.$onInit = function () {
-          console.log('Angular mounting!', vm, $scope);
-          checkFeature().then(response => {
-              console.log('Has result!', response);
-              vm.hasFeature = response;
-              $scope.$digest();
-          })
-      };
-    },
+  controllerAs: "vm",
+  controller($scope) {
+    const vm = this;
+    vm.mode = process.env.MODE;
+    vm.hasFeature = false;
+    vm.$onInit = async () => {
+      console.log("Angular mounting!", vm, $scope);
+      const { checkHasFeature } = await import("utilities/core");
+      const response = await checkHasFeature("test-one");
+      console.log("feature config", response);
+      vm.hasFeature = response;
+      $scope.$digest();
+    };
+  },
 });
