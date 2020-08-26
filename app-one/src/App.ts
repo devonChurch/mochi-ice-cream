@@ -5,12 +5,17 @@ angular.module("appOne", []).component("wrapper", {
     <div class="alert alert-info">
       <h4 class="alert-heading">Application One</h4>
       <ul>
-        <li>Environment: <strong>{{ vm.mode }}</strong></li>
+        <li>Environment: <strong>{{ vm.applicationMode }}</strong></li>
         <li>Framework: <strong>AngularJS</strong></li>
         <li>Has Feature:
             <strong>
-                <span ng-if="vm.hasFeature">Yes 👍</span>    
-                <span ng-if="!vm.hasFeature">No 👎</span>    
+                <ng-container ng-if="!vm.isLoadingFeaure">
+                    <span ng-if="vm.hasFeature">{{ vm.featureMode }} 👍</span>    
+                    <span ng-if="!vm.hasFeature">{{ vm.featureMode }} 👎</span>
+                </ng-container>
+                <ng-container ng-if="vm.isLoadingFeaure">
+                    Loading ⏱️
+                </ng-container>
             </strong>
         </li>
       </ul>
@@ -19,14 +24,16 @@ angular.module("appOne", []).component("wrapper", {
   controllerAs: "vm",
   controller($scope) {
     const vm = this;
-    vm.mode = process.env.MODE;
+    vm.applicationMode = process.env.MODE;
     vm.hasFeature = false;
+    vm.featureMode = "";
+    vm.isLoadingFeaure = true;
     vm.$onInit = async () => {
-      console.log("Angular mounting!", vm, $scope);
       const { checkHasFeature } = await import("utilities/core");
-      const response = await checkHasFeature("test-one");
-      console.log("feature config", response);
-      vm.hasFeature = response;
+      const feature = await checkHasFeature("test-one") as FeatureFlag;
+      vm.hasFeature = feature.isActive;
+      vm.featureMode = feature.mode;
+      vm.isLoadingFeaure = false;
       $scope.$digest();
     };
   },

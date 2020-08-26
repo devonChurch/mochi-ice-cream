@@ -21,8 +21,11 @@ module.exports = async (_, args) => {
     : require("./env.config.json");
   const { appOne: appOneEnv, appTwo: appTwoEnv, utilities: utilitiesEnv } = envConfig;
 
-
-  console.log('UTILITIES...', `utilities@${utilitiesLoc[utilitiesEnv].href}remoteEntry.js`);
+  const remotes = {
+    appOne: `${appOneLoc[appOneEnv].href}remoteEntry.js`,
+    appTwo: `${appTwoLoc[appTwoEnv].href}remoteEntry.js`,
+    utilities: `${utilitiesLoc[utilitiesEnv].href}remoteEntry.js`,
+  };
 
   console.log(
     "Building Application [Shell]",
@@ -67,17 +70,16 @@ module.exports = async (_, args) => {
     plugins: [
       new ModuleFederationPlugin({
         name: "shell",
-        remotes: {
-          appOne: `appOne@${appOneLoc[appOneEnv].href}remoteEntry.js`,
-          appTwo: `appTwo@${appTwoLoc[appTwoEnv].href}remoteEntry.js`,
-          utilities: `utilities`,
-        },
+        remotes: Object
+          .entries(remotes)
+          .reduce((acc, [key, value]) => ({ ...acc, [key]: `${key}@${value}` }), {}),
         shared: [],
       }),
 
       new HtmlWebpackPlugin({
         template: path.resolve(DIR_SRC, "index.html"),
-        mode: capitalize(MODE)
+        mode: capitalize(MODE),
+        remotes
       }),
 
       new MiniCssExtractPlugin(),

@@ -1,11 +1,19 @@
+const optimizelySdk = require('@optimizely/optimizely-sdk');
 const MODE = process.env.MODE;
 
-export const checkHasFeature = (feature: string) => new Promise((resolve) => setTimeout(() => {
-  console.log(`Checking for feature: ${feature}`);
+const optimizelyClient = (async () => {
+  const response = await fetch(`https://cdn.optimizely.com/datafiles/${process.env.OPTIMIZELY_SDK}.json`);
+  const datafile = await response.json();
+  return optimizelySdk.createInstance({ datafile });
+})();
 
-  resolve({
+export const checkHasFeature = async (feature: string) => {
+  const isActive = (await optimizelyClient)
+    .isFeatureEnabled(feature, `${Math.random()}`);
+
+  return {
     feature,
-    isActive: true,
+    isActive,
     mode: MODE
-  });
-}, 3000));
+  };
+};

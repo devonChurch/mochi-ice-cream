@@ -11,6 +11,10 @@ module.exports = async (_, args) => {
   const DIR_SRC = path.resolve(__dirname, "src");
   const IS_NOT_DEVELOPMENT = MODE !== DEVELOPMENT;
   const IS_DEVELOPMENT = !IS_NOT_DEVELOPMENT;
+  const OPTIMIZELY_SDK = {
+    development: "BQUkKJQ7UhKCVVuY8eKeV",
+    production: "YAArvxpSjVqhwjJoKauJZ"
+  };
 
   const locConfig = await axios("http://mochi-ice-cream.config.s3-website-ap-southeast-2.amazonaws.com/loc.config.json");
   const { utilities: utilitiesLoc } = locConfig.data;
@@ -62,7 +66,10 @@ module.exports = async (_, args) => {
       }),
 
       new webpack.EnvironmentPlugin({
-        MODE: capitalize(MODE)
+        MODE: capitalize(MODE),
+        OPTIMIZELY_SDK: IS_NOT_DEVELOPMENT
+          ? OPTIMIZELY_SDK.production
+          : OPTIMIZELY_SDK.development
       })
     ],
 
