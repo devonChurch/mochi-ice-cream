@@ -22,7 +22,7 @@ angular.module("appOne", []).component("wrapper", {
     </div>
     `,
   controllerAs: "vm",
-  controller($scope) {
+  controller: ["$scope", function($scope) {
     const vm = this;
     vm.applicationMode = process.env.MODE;
     vm.hasFeature = false;
@@ -36,5 +36,5 @@ angular.module("appOne", []).component("wrapper", {
       vm.isLoadingFeaure = false;
       $scope.$digest();
     };
-  },
+  }],
 });
