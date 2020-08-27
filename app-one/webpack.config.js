@@ -15,14 +15,22 @@ module.exports = async (_, args) => {
   const IS_DEVELOPMENT = !IS_NOT_DEVELOPMENT;
   const ISOLATION_CHUNKS = ["app-one", "shell"];
 
-  const locConfig = await axios("http://mochi-ice-cream.config.s3-website-ap-southeast-2.amazonaws.com/loc.config.json");
-  const { appOne: appOneLoc } = locConfig.data;
+  const { data: locConfig } = 
+    await axios("http://mochi-ice-cream.config.s3-website-ap-southeast-2.amazonaws.com/loc.config.json");
+
+  const envConfig = IS_NOT_DEVELOPMENT
+    ? { utilities: MODE }
+    : require("./env.config.json");
+
+  const remotes = {
+    utilities: `${locConfig.utilities[envConfig.utilities].href}remoteEntry.js`,
+  };
 
   console.log(
     "Building Application [One]",
     args,
     JSON.stringify({
-      location: { appOneLoc },
+      location: locConfig,
       consts: { DIR_SRC, MODE, IS_NOT_DEVELOPMENT, IS_DEVELOPMENT }
     }, null, 2));
 
@@ -41,7 +49,7 @@ module.exports = async (_, args) => {
     },
 
     output: {
-      publicPath: appOneLoc[MODE].href,
+      publicPath: locConfig.appOne[MODE].href,
     },
 
     mode: MODE,
@@ -85,7 +93,15 @@ module.exports = async (_, args) => {
           // the `eagar` settings and can use same federated config to deploy an
           // "isolated" and "full" Micro Front-end bundle.
           appOne: "appOne",
-          utilities: "utilities"
+          
+          // Add remotes as "generic" federated references.
+          // @example 
+          // ✅ { "foo": "foo" }
+          // ❎ { "foo": "foo@http://.../remoteEntry.js" }
+          ...Object
+            .keys(remotes)
+            .reduce((acc, key) => 
+              ({ ...acc, [key]: key }), {})
         }
       }),
 
@@ -101,7 +117,8 @@ module.exports = async (_, args) => {
         chunksSortMode: (prevChunk, nextChunk) => (
           ISOLATION_CHUNKS.indexOf(prevChunk)
           - ISOLATION_CHUNKS.indexOf(nextChunk)
-        )
+        ),
+        remotes
       }),
       
       new webpack.EnvironmentPlugin({
@@ -113,7 +130,7 @@ module.exports = async (_, args) => {
 
     ...IS_DEVELOPMENT && {
       devServer: {
-        port: appOneLoc[DEVELOPMENT].port,
+        port: locConfig.appOne[DEVELOPMENT].port,
       }
     },
   };

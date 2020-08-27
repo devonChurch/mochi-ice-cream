@@ -13,18 +13,17 @@ module.exports = async (_, args) => {
   const IS_NOT_DEVELOPMENT = MODE !== DEVELOPMENT;
   const IS_DEVELOPMENT = !IS_NOT_DEVELOPMENT;
 
-  const { data: locConfig } = await axios("http://mochi-ice-cream.config.s3-website-ap-southeast-2.amazonaws.com/loc.config.json");
-  const { shell: shellLoc, appOne: appOneLoc, appTwo: appTwoLoc, utilities: utilitiesLoc } = locConfig;
+  const { data: locConfig } =
+    await axios("http://mochi-ice-cream.config.s3-website-ap-southeast-2.amazonaws.com/loc.config.json");
 
   const envConfig = IS_NOT_DEVELOPMENT
-    ? { appOne: PRODUCTION, appTwo: PRODUCTION, utilities: PRODUCTION }
+    ? { appOne: MODE, appTwo: MODE, utilities: MODE }
     : require("./env.config.json");
-  const { appOne: appOneEnv, appTwo: appTwoEnv, utilities: utilitiesEnv } = envConfig;
 
   const remotes = {
-    appOne: `${appOneLoc[appOneEnv].href}remoteEntry.js`,
-    appTwo: `${appTwoLoc[appTwoEnv].href}remoteEntry.js`,
-    utilities: `${utilitiesLoc[utilitiesEnv].href}remoteEntry.js`,
+    appOne: `${locConfig.appOne[envConfig.appOne].href}remoteEntry.js`,
+    appTwo: `${locConfig.appTwo[envConfig.appTwo].href}remoteEntry.js`,
+    utilities: `${locConfig.utilities[envConfig.utilities].href}remoteEntry.js`,
   };
 
   console.log(
@@ -41,7 +40,7 @@ module.exports = async (_, args) => {
     entry: path.resolve(DIR_SRC, "index"),
 
     output: {
-      publicPath: shellLoc[MODE].href,
+      publicPath: locConfig.shell[MODE].href,
     },
 
     mode: MODE,
@@ -70,9 +69,16 @@ module.exports = async (_, args) => {
     plugins: [
       new ModuleFederationPlugin({
         name: "shell",
+        
+        // Add remotes as "full" federated references.
+        // @example 
+        // ✅ { "foo": "foo@http://.../remoteEntry.js" }
+        // ❎ { "foo": "foo" }
         remotes: Object
           .entries(remotes)
-          .reduce((acc, [key, value]) => ({ ...acc, [key]: `${key}@${value}` }), {}),
+          .reduce((acc, [key, value]) => 
+            ({ ...acc, [key]: `${key}@${value}` }), {}),
+        
         shared: [],
       }),
 
@@ -87,7 +93,7 @@ module.exports = async (_, args) => {
 
     ...(IS_DEVELOPMENT && {
       devServer: {
-        port: shellLoc[DEVELOPMENT].port,
+        port: locConfig.shell[DEVELOPMENT].port,
       },
     }),
   };
