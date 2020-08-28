@@ -26,6 +26,15 @@
             "href": "http://mochi-ice-cream.app-two.s3-website-ap-southeast-2.amazonaws.com/"
         }
     },
+    "appThree": {
+        "development": {
+            "port": 8004,
+            "href": "http://localhost:8004/"
+        },
+        "production": {
+            "href": "http://mochi-ice-cream.app-three.s3-website-ap-southeast-2.amazonaws.com/"
+        }
+    },
     "utilities": {
         "development": {
             "port": 8003,
