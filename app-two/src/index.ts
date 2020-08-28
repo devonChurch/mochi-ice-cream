@@ -11,7 +11,7 @@ const angularLifecycles = singleSpaAngularJS({
   mainAngularModule: "appTwo",
   uiRouter: true,
   preserveGlobal: false,
-  template: `<wrapper />`,
+  template: `<wrapper />`
 });
 
 export function bootstrap(props: Props) {

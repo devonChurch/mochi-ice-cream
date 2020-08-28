@@ -15,14 +15,24 @@ module.exports = async (_, args) => {
   const IS_DEVELOPMENT = !IS_NOT_DEVELOPMENT;
   const ISOLATION_CHUNKS = ["app-two", "shell"];
 
-  const locConfig = await axios("http://mochi-ice-cream.config.s3-website-ap-southeast-2.amazonaws.com/loc.config.json");
-  const { appTwo: appTwoLoc } = locConfig.data;
+  const { data: locConfig } = 
+    await axios("http://mochi-ice-cream.config.s3-website-ap-southeast-2.amazonaws.com/loc.config.json");
+
+  const envConfig = IS_NOT_DEVELOPMENT
+    ? { appThree: MODE }
+    : require("./env.config.json");
+
+  const remotes = {
+    appThree: `${locConfig.appThree[envConfig.appThree].href}remoteEntry.js`,
+    utilities: `${locConfig.utilities[envConfig.utilities].href}remoteEntry.js`,
+  };
 
   console.log(
     "Building Application [Two]",
     args,
     JSON.stringify({
-      location: { appTwoLoc },
+      location: locConfig,
+      environment: envConfig,
       consts: { DIR_SRC, MODE, IS_NOT_DEVELOPMENT, IS_DEVELOPMENT }
     }, null, 2));
 
@@ -41,7 +51,7 @@ module.exports = async (_, args) => {
     },
 
     output: {
-      publicPath: appTwoLoc[MODE].href,
+      publicPath: locConfig.appTwo[MODE].href,
     },
 
     mode: MODE,
@@ -84,7 +94,16 @@ module.exports = async (_, args) => {
           // This allows us to resolve async shared dependancies without modifying
           // the `eagar` settings and can use same federated config to deploy an
           // "isolated" and "full" Micro Front-end bundle.
-          appTwo: "appTwo"
+          appTwo: "appTwo",
+
+          // Add remotes as "generic" federated references.
+          // @example 
+          // ✅ { "foo": "foo" }
+          // ❎ { "foo": "foo@http://.../remoteEntry.js" }
+          ...Object
+            .keys(remotes)
+            .reduce((acc, key) => 
+              ({ ...acc, [key]: key }), {})
         }
       }),
 
@@ -100,7 +119,8 @@ module.exports = async (_, args) => {
         chunksSortMode: (prevChunk, nextChunk) => (
           ISOLATION_CHUNKS.indexOf(prevChunk)
           - ISOLATION_CHUNKS.indexOf(nextChunk)
-        )
+        ),
+        remotes
       }),
       
       new webpack.EnvironmentPlugin({
@@ -112,7 +132,7 @@ module.exports = async (_, args) => {
 
     ...IS_DEVELOPMENT && {
       devServer: {
-        port: appTwoLoc[DEVELOPMENT].port,
+        port: locConfig.appTwo[DEVELOPMENT].port,
       }
     },
   };

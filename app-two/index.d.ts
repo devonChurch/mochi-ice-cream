@@ -25,3 +25,4 @@ declare module "single-spa" {
 }
 
 declare module "appTwo/Wrapper" {}
+declare module "appThree/Wrapper" {}
