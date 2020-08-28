@@ -5,9 +5,17 @@ export default {
       applicationMode: process.env.MODE,
     };
   },
-  mounted() {
-    console.log("Dashboard (Landing Page) | mounted", this);
+  async mounted() {
+    const domElement = this.$refs["app-three-parel"];
+    const parcelProps = { domElement };
+    const parcelConfig = await import("appOne/Wrapper");
+    const { mountRootParcel } = this.$vnode.context.singleSpa;
+
+    this.parcel = mountRootParcel(parcelConfig, parcelProps);
   },
+  async beforeDestroy() {
+    await this.parcel.unmount();
+  }
 };
 </script>
 
@@ -19,6 +27,10 @@ export default {
         Environment: <strong>{{ applicationMode }}</strong>
       </li>
       <li>Framework: <strong>Vue JS</strong></li>
+      <li class="border border-secondary rounded pt-2 px-3 mt-2">
+        Parcel: <strong>Application One</strong>
+        <div class="mt-2" ref="app-three-parel"></div>
+      </li>
     </ul>
   </div>
 </template>

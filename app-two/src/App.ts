@@ -8,8 +8,8 @@ angular.module("appTwo", []).component("wrapper", {
         <li>Environment: <strong>{{ vm.applicationMode }}</strong></li>
         <li>Framework: <strong>AngularJS</strong></li>
         <li class="border border-success rounded pt-2 px-3 mt-2">
-          Parcel: <strong>Application Three</strong>
-          <div class="mt-2" data-parcel="app-three"></div>    
+          Parcel: <strong>Application One</strong>
+          <div class="mt-2" data-parcel="app-three"></div>
         </li>
       </ul>
     </div>

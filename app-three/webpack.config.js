@@ -20,10 +20,13 @@ module.exports = async (_, args) => {
     await axios("http://mochi-ice-cream.config.s3-website-ap-southeast-2.amazonaws.com/loc.config.json");
 
   const envConfig = IS_NOT_DEVELOPMENT
-    ? { }
+    ? {appOne: MODE, utilities: MODE }
     : require("./env.config.json");
 
-  const remotes = {};
+  const remotes = {
+    appOne: `${locConfig.appOne[envConfig.appOne].href}remoteEntry.js`,
+    utilities: `${locConfig.utilities[envConfig.utilities].href}remoteEntry.js`,
+  };
 
   console.log(
     "Building Application [Three]",
