@@ -18,4 +18,11 @@ registerApplication({
   customProps,
 });
 
+registerApplication({
+  name: "appThree",
+  app: async () => import("appThree/Wrapper"),
+  activeWhen: () => true,
+  customProps,
+});
+
 start();
