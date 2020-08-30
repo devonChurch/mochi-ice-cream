@@ -29,11 +29,7 @@ angular.module("appTwo", []).component("wrapper", {
       // @see Solution | https://www.linkedin.com/pulse/inception-one-angularjs-application-inside-another-m%C3%A1rquez-soto/
       $element.data("$injector", "");
 
-      const parcelContainer = $element[0].querySelector(`[data-parcel="app-three"]`);
-      const domElement = document.createElement("div");
-      
-      parcelContainer.appendChild(domElement);
-
+      const domElement = $element[0].querySelector(`[data-parcel="app-three"]`);
       const parcelProps = { domElement };
       const parcelConfig = await import("appThree/Wrapper");
       const { mountRootParcel } = $scope.$root.singleSpaProps.singleSpa;

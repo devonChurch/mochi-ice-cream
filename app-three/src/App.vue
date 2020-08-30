@@ -6,11 +6,7 @@ export default {
     };
   },
   async mounted() {
-    const parcelContainer = this.$refs["app-three-parel"];
-    const domElement = document.createElement("div");
-
-    parcelContainer.appendChild(domElement);
-
+    const domElement = this.$refs["app-three-parel"];
     const parcelProps = { domElement };
     const parcelConfig = await import("appOne/Wrapper");
     const { mountRootParcel } = this.$vnode.context.singleSpa;
