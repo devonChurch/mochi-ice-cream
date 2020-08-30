@@ -8,7 +8,7 @@ angular.module("appTwo", []).component("wrapper", {
         <li>Environment: <strong>{{ vm.applicationMode }}</strong></li>
         <li>Framework: <strong>AngularJS</strong></li>
         <li class="border border-success rounded pt-2 px-3 mt-2">
-          Parcel: <strong>Application One</strong>
+          Parcel: <strong>Application Three</strong>
           <div class="mt-2" data-parcel="app-three"></div>
         </li>
       </ul>
@@ -19,7 +19,11 @@ angular.module("appTwo", []).component("wrapper", {
     const vm = this;
     vm.applicationMode = process.env.MODE;
     vm.$onInit = () => setTimeout(async () => {
-      const domElement = $element[0].querySelector(`[data-parcel="app-three"]`);
+      const parcelContainer = $element[0].querySelector(`[data-parcel="app-three"]`);
+      const domElement = document.createElement("div");
+      
+      parcelContainer.appendChild(domElement);
+
       const parcelProps = { domElement };
       const parcelConfig = await import("appThree/Wrapper");
       const { mountParcel } = $scope.$root.singleSpaProps;
@@ -29,6 +33,6 @@ angular.module("appTwo", []).component("wrapper", {
 
     this.$onDestroy = async () => {
       await this.parcel.unmount();
-    };
+    }
   }],
 });
