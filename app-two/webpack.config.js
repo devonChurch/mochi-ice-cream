@@ -19,7 +19,7 @@ module.exports = async (_, args) => {
     await axios("http://mochi-ice-cream.config.s3-website-ap-southeast-2.amazonaws.com/loc.config.json");
 
   const envConfig = IS_NOT_DEVELOPMENT
-    ? { appOne: MODE, appThree: MODE }
+    ? { appOne: MODE, appThree: MODE, utilities: MODE }
     : require("./env.config.json");
 
   const remotes = {
