@@ -36,9 +36,9 @@ angular.module("appTwo", []).component("wrapper", {
 
       const parcelProps = { domElement };
       const parcelConfig = await import("appThree/Wrapper");
-      const { mountParcel } = $scope.$root.singleSpaProps;
+      const { mountRootParcel } = $scope.$root.singleSpaProps.singleSpa;
 
-      this.parcel = mountParcel(parcelConfig, parcelProps);
+      this.parcel = mountRootParcel(parcelConfig, parcelProps);
     }, 0);
 
     this.$onDestroy = async () => {
