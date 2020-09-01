@@ -3,6 +3,7 @@ export default {
   data() {
     return {
       applicationMode: process.env.MODE,
+      counter: 0
     };
   },
   async mounted() {
@@ -16,6 +17,11 @@ export default {
   async beforeDestroy() {
     await this.parcel.unmount();
   },
+  methods: {
+    handleCount() {
+      this.counter += 1;
+    }
+  }
 };
 </script>
 
@@ -27,6 +33,9 @@ export default {
         Environment: <strong>{{ applicationMode }}</strong>
       </li>
       <li>Framework: <strong>Vue JS</strong></li>
+        <li class="my-2">Counter: 
+          <button type="button" class="btn btn-secondary btn-sm" @click="handleCount()">Add #{{ counter }}</button>
+        </li>
       <li class="border border-secondary rounded pt-2 px-3 mt-2">
         Parcel: <strong>Application One</strong>
         <div class="mt-2" ref="app-three-parel"></div>

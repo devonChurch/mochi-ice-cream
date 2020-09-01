@@ -7,6 +7,9 @@ angular.module("appTwo", []).component("wrapper", {
       <ul>
         <li>Environment: <strong>{{ vm.applicationMode }}</strong></li>
         <li>Framework: <strong>AngularJS</strong></li>
+        <li class="my-2">Counter: 
+          <button type="button" class="btn btn-success btn-sm" ng-click="vm.handleCount()">Add #{{ vm.counter }}</button>
+        </li>
         <li class="border border-success rounded pt-2 px-3 mt-2">
           Parcel: <strong>Application Three</strong>
           <div class="mt-2" data-parcel="app-three"></div>
@@ -17,7 +20,10 @@ angular.module("appTwo", []).component("wrapper", {
   controllerAs: "vm",
   controller: ["$scope", "$element", function($scope, $element) {
     const vm = this;
+    
     vm.applicationMode = process.env.MODE;
+    vm.counter = 0;
+    
     vm.$onInit = () => setTimeout(async () => {
       // AngularJS, by default, does not load nested AngularJS Parcel inside of
       // an already Bootstrapped AngularJS application. There is an unsupported
@@ -39,6 +45,10 @@ angular.module("appTwo", []).component("wrapper", {
 
     this.$onDestroy = async () => {
       await this.parcel.unmount();
-    }
+    };
+
+    vm.handleCount = () => {
+      vm.counter += 1;
+    };
   }],
 });
