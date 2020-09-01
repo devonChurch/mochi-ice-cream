@@ -31,6 +31,7 @@ module.exports = async (_, args) => {
     args,
     JSON.stringify({
       location: locConfig,
+      environment: envConfig,
       consts: { DIR_SRC, MODE, IS_NOT_DEVELOPMENT, IS_DEVELOPMENT }
     }, null, 2));
 
